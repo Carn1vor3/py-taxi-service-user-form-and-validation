@@ -9,19 +9,18 @@ from django.core.validators import MinLengthValidator, MaxLengthValidator
 from taxi.models import Driver, Car
 
 
+def validate_uppercase_start(value):
+    if not re.match(r"^[A-Z]{3}", value):
+        raise ValidationError("First 3 symbols should be uppercase letters.")
+
+
+def validate_last_five_digits(value):
+    str_value = str(value)
+    if not re.match(r".*\d{5}$", str_value):
+        raise ValidationError("Last five symbols should be an integer.")
+
+
 class DriverCreationForm(UserCreationForm):
-    def validate_uppercase_start(self):
-        if not isinstance(self, str):
-            raise ValidationError("Value must be of type str")
-
-        if not re.match(r"^[A-Z]{3}", self):
-            raise ValidationError("First 3 symbols should be a string.")
-
-    def validate_last_five_digits(self):
-        str_value = str(self)
-        if not re.match(r".*\d{5}$", str_value):
-            raise ValidationError("Last five symbols should be an integer.")
-
     license_number = forms.CharField(
         required=True,
         validators=[
@@ -43,17 +42,6 @@ class DriverCreationForm(UserCreationForm):
 
 
 class DriverLicenseUpdateForm(forms.ModelForm):
-    def validate_uppercase_start(self):
-        if not isinstance(self, str):
-            raise ValidationError("Value must be of type str")
-
-        if not re.match(r"^[A-Z]{3}", self):
-            raise ValidationError("First 3 symbols should be a string.")
-
-    def validate_last_five_digits(self):
-        str_value = str(self)
-        if not re.match(r".*\d{5}$", str_value):
-            raise ValidationError("Last five symbols should be an integer.")
 
     license_number = forms.CharField(
         required=True,
